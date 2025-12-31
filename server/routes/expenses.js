@@ -9,15 +9,28 @@ router.get("/", (req, res) => {
 
 // ✅ Create a new expense (POST)
 router.post("/", async (req, res) => {
-    //console.log("📥 Received new expense:", req.body);
   try {
-    const expense = new Expense(req.body);
-    const saved = await expense.save();
-    res.status(201).json(saved);
+    const { title, amount, category, date } = req.body; // ✅ extract date from body
+
+    const expense = new Expense({
+      title,
+      amount,
+      category,
+      date, // ✅ now this is defined
+    });
+
+    const savedExpense = await expense.save();
+    console.log("✅ Expense saved to DB:", savedExpense);
+    res.status(201).json(savedExpense);
   } catch (err) {
+    console.error("❌ Error saving expense:", err);
     res.status(400).json({ error: err.message });
   }
 });
+
+
+
+
 
 // ✅ Get all expenses (GET)
 router.get("/all", async (req, res) => {
@@ -43,6 +56,40 @@ router.get("/:id", async (req, res) => {
     res.json(expense);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Inside expenses.js or the relevant route file
+// Recommendation endpoint
+router.get('/recommendation', async (req, res) => {
+  try {
+    const expenses = await Expense.find();
+
+    if (expenses.length === 0) {
+      return res.json({ recommendations: ["No expenses found. Start adding your spending details."] });
+    }
+
+    const categoryTotals = {};
+    expenses.forEach(exp => {
+      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+    });
+
+    const sortedCategories = Object.entries(categoryTotals)
+      .sort((a, b) => b[1] - a[1]);
+
+    const mostSpent = sortedCategories[0][0];
+    const leastSpent = sortedCategories[sortedCategories.length - 1][0];
+
+    const recommendations = [
+      `You've been spending the most on **${mostSpent}**. Consider reviewing if all those expenses are necessary.`,
+      `Your least spending category is **${leastSpent}**. Maybe you can increase budget there if needed.`,
+    ];
+
+    res.json({ recommendations });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while generating recommendations.' });
   }
 });
 

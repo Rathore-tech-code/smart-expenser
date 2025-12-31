@@ -13,7 +13,7 @@ app.use(cors(
   {origin:"http://localhost:5173"}
 ));
 app.use(express.json());
-
+console.log("🔍 Connecting to:", process.env.MONGO_URI);  // ✅ Add this line
 // MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI, {
