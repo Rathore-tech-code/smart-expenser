@@ -9,9 +9,12 @@ require("dotenv").config();
 const app = express();
 
 // Middlewares
-app.use(cors(
-  {origin:"http://localhost:5173"}
-));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://smart-expenser.vercel.app"
+  ]
+}));
 app.use(express.json());
 console.log("🔍 Connecting to:", process.env.MONGO_URI);  // ✅ Add this line
 // MongoDB connection
