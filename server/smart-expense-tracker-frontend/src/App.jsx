@@ -14,7 +14,7 @@ const [selectedDate, setSelectedDate] = useState('');
   const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-  fetch("http://localhost:5000/api/expenses")
+  fetch("https://smart-expenser-qlmp.onrender.com/api/expenses")
     .then((res) => res.json())
     .then((data) => {
       console.log("Fetched data:", data); // debug this in browser
@@ -43,7 +43,7 @@ const [selectedDate, setSelectedDate] = useState('');
   };
 
   try {
-    const response = await fetch("http://localhost:5000/api/expenses", {
+    const response = await fetch("https://smart-expenser-qlmp.onrender.com/api/expenses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const [selectedDate, setSelectedDate] = useState('');
 };
 const handleDelete = async (id) => {
   try {
-    await fetch(`http://localhost:5000/api/expenses/${id}`, {
+    await fetch(`https://smart-expenser-qlmp.onrender.com/api/expenses/${id}`, {
       method: 'DELETE',
     });
 

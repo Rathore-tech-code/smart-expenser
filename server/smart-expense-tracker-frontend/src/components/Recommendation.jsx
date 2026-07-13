@@ -6,7 +6,7 @@ const Recommendation = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/expenses/recommendation")
+      .get("https://smart-expenser-qlmp.onrender.com/api/expenses/recommendations")
       .then((response) => {
         setRecommendations(response.data.recommendations || []);
       })
